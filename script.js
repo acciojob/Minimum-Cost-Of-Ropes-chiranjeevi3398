@@ -1,27 +1,36 @@
-function calculateMinCost() {
+function calculateMinCost(ropes){
   //your code here
-  // Retrieve the input string from the input element
-const input = document.getElementById('ropes-input').value;
+ 
+  // Convert the input string to an array of numbers
+  const lengths = ropes.split(",").map(Number);
 
-// Parse the input string into an array of integers
-const ropeLengths = input.split(',').map(Number);
+  // Create a min heap to store the rope lengths
+  const heap = new MinHeap();
+  
+  // Insert the rope lengths into the min heap
+  for (let i = 0; i < lengths.length; i++) {
+    heap.insert(lengths[i]);
+  }
 
-// Sort the array in ascending order
-ropeLengths.sort((a, b) => a - b);
+  let totalCost = 0;
 
-// Initialize the total cost
-let totalCost = 0;
+  // Combine the ropes until only one rope remains in the heap
+  while (heap.size() > 1) {
+    // Remove the two smallest ropes from the heap
+    const rope1 = heap.removeMin();
+    const rope2 = heap.removeMin();
 
-// Iterate through the sorted array and calculate the total cost
-while (ropeLengths.length > 1) {
-  const sum = ropeLengths[0] + ropeLengths[1]; // Sum of two smallest rope lengths
-  totalCost += sum; // Add the sum to the total cost
-  ropeLengths.splice(0, 2, sum); // Replace the two ropes with their sum in the array
+    // Calculate the cost of connecting the ropes
+    const cost = rope1 + rope2;
+
+    // Add the cost to the total cost
+    totalCost += cost;
+
+    // Insert the combined rope length back into the heap
+    heap.insert(cost);
+  }
+
+  return totalCost;
 }
 
-// Display the minimum cost inside the result div
-document.getElementById('result').textContent = totalCost.toString();
 
-  
-  
-}  
